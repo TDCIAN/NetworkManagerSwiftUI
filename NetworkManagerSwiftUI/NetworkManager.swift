@@ -10,6 +10,7 @@ import Network
 
 class NetworkManager: ObservableObject {
     let monitor = NWPathMonitor()
+    let queue = DispatchQueue(label: "NetworkManager")
 
     @Published var isConnected = true
     
@@ -32,11 +33,11 @@ class NetworkManager: ObservableObject {
             }
         }
         
-        monitor.start(queue: DispatchQueue.global())
+        monitor.start(queue: queue)
     }
     
     func startMonitoring() {
-        monitor.start(queue: DispatchQueue.main)
+        monitor.start(queue: queue)
         monitor.pathUpdateHandler = { path in
             self.isConnected = path.status == .satisfied
             
